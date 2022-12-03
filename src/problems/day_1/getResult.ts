@@ -1,17 +1,29 @@
 import textData from "./data.txt";
 
 export const getResultDayOne = async () => {
+  const sortedGroupTotals = await getSortedCalorieSumPerElve();
+
+  const topThreeCalories = sortedGroupTotals.slice(0, 3);
+  const totalTopThree = topThreeCalories.reduce((a, b) => a + b);
+
+  const maxValue = sortedGroupTotals[0];
+  return [maxValue, totalTopThree];
+};
+
+export const getGroupedCalories = async () => {
   const text = await fetch(textData).then((r) => r.text());
 
-  const groupTotals = text
-    .split("\r\n\r\n")
-    .map((g) => {
-      const numberGroup = g.split("\r\n").map((i) => parseInt(i));
-      const summed = numberGroup.reduce((a, b) => a + b);
-      return summed;
-    })
-    .sort((a, b) => b - a);
+  const groupedCalouries = text.split("\r\n\r\n").map((g) => {
+    const numberGroup = g.split("\r\n").map((i) => parseInt(i));
+    return numberGroup;
+  });
 
-  const maxValue = groupTotals[0];
-  return maxValue;
+  return groupedCalouries;
+};
+
+export const getSortedCalorieSumPerElve = async () => {
+  const groupedCalouries = await getGroupedCalories();
+
+  const sortedGroupTotals = groupedCalouries.map((g) => g.reduce((a, b) => a + b)).sort((a, b) => b - a);
+  return sortedGroupTotals;
 };

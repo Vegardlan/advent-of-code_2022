@@ -28,5 +28,12 @@ export const Page = () => {
 
 const calcDayOneResult = async (onFinish: (arg: JSX.Element) => void) => {
   const result = await getResultDayOne();
+  onFinish(
+    <>
+      <h1>Del 1: {result[0]}</h1>
+      <h1>Del 2: {result[1]}</h1>
+    </>
+  );
+};
   onFinish(<h1>{result}</h1>);
 };
